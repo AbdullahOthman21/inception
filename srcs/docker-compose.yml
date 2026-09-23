@@ -16,7 +16,7 @@ services:
       - .env
     secrets:
       - db_user_password
-      - db_root_password
+      - db_admin_password
     ports:
       - "3306"
     networks:
@@ -28,6 +28,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    restart: on-failure
 
   nginx:
     build: ./requirements/nginx
@@ -39,8 +40,36 @@ services:
     volumes:
       - wordpress_volume:/var/www/html
     depends_on:
-      - wordpress
+      wordpress:
+        condition: service_healthy
+    restart: on-failure
 
+  wordpress:
+    build: ./requirements/wordpress
+    container_name: wordpress
+    expose:
+      - "9000"
+    env_file:
+      - .env
+    networks:
+      - inception
+    volumes:
+      - wordpress_volume:/var/www/html
+    secrets:
+      - db_admin_password
+      - db_user_password
+      - wp_admin_password
+      - wp_user_password
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    healthcheck:
+     test: ["CMD", "nc", "-z", "127.0.0.1", "9000"]
+     interval: 10s
+     timeout: 3s
+     retries: 3
+     start_period: 10s
+    restart: on-failure
 
 networks:
   inception:
@@ -52,11 +81,11 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/ralrawaj/data/wordpress
+      device: /home/abdothma/data/wordpress
 
   mariadb_volume:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/ralrawaj/data/mariadb
+      device: /home/abdothma/data/mariadb
