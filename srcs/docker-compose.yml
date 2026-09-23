@@ -1,0 +1,62 @@
+secrets:
+  db_admin_password:
+    file: ../secrets/db_admin_password
+  db_user_password:
+    file: ../secrets/db_user_password
+  wp_admin_password:
+    file: ../secrets/wp_admin_password
+  wp_user_password:
+    file: ../secrets/wp_user_password
+
+services:
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: mariadb
+    env_file:
+      - .env
+    secrets:
+      - db_user_password
+      - db_root_password
+    ports:
+      - "3306"
+    networks:
+      - inception
+    volumes:
+      - mariadb_volume:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    ports:
+      - "443:443"
+    networks:
+      - inception
+    volumes:
+      - wordpress_volume:/var/www/html
+    depends_on:
+      - wordpress
+
+
+networks:
+  inception:
+    driver: bridge
+
+volumes:
+  wordpress_volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ralrawaj/data/wordpress
+
+  mariadb_volume:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ralrawaj/data/mariadb

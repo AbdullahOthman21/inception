@@ -1,12 +1,9 @@
-FROM alpine:3.23.5
+FROM alpine:3.23
 
-RUN apk update && apk add --no-cache mariadb mariadb-client
-
-RUN mkdir -p /run/mysqld && chown -R mysql:mysql /run/mysqld
-
-COPY init_db.sh /usr/local/bin/init_db.sh
-RUN chmod +x /usr/local/bin/init_db.sh
+RUN apk add mariadb mariadb-client
 
 EXPOSE 3306
 
-ENTRYPOINT ["/usr/local/bin/init_db.sh"]
+COPY script.sh /script.sh
+
+ENTRYPOINT ["sh", "/script.sh"]
