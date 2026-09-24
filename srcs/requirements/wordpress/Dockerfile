@@ -49,4 +49,6 @@ RUN chmod +x /usr/local/bin/wp-entrypoint.sh
 
 EXPOSE 9000
 
+RUN sed -i 's/^memory_limit = .*/memory_limit = 512M/' /etc/php*/php.ini
+
 ENTRYPOINT ["wp-entrypoint.sh"]
