@@ -15,7 +15,7 @@ if [ ! -f wp-config.php ]; then
   wp config create \
     --dbname="$DB_NAME" \
     --dbuser="$DB_USER" \
-	--dbpass="$(cat /run/secrets/db_user_password)" \
+	--dbpass="$DB_USER_PASSWORD" \
     --dbhost="mariadb" \
     --skip-check \
     --allow-root
@@ -27,16 +27,16 @@ if ! wp core is-installed --allow-root; then
   wp core install \
     --url="$URL" \
 	--title="inception" \
-    --admin_user="$WORDPRESS_ADMIN_USER" \
-	--admin_password="$(cat /run/secrets/wp_admin_password)" \
-    --admin_email="$WORDPRESS_ADMIN_EMAIL" \
+    --admin_user="$WORDPRESS_ADMIN" \
+	--admin_password="$WORDPRESS_PASSWORD" \
+    --admin_email="${WORDPRESS_ADMIN}@gmail.com" \
     --skip-email \
     --allow-root
 
   echo "wordpress: creating second (non-admin) user..."
-  wp user create "$WORDPRESS_USER" "$WORDPRESS_USER_EMAIL" \
+  wp user create "$WORDPRESS_USER" "${WORDPRESS_USER}@gmail.com" \
     --role=author \
-	--user_pass="$(cat /run/secrets/wp_user_password)" \
+	--user_pass="$WORDPRESS_PASSWORD" \
     --allow-root
 fi
 

@@ -1,22 +1,9 @@
-secrets:
-  db_admin_password:
-    file: ../secrets/db_admin_password
-  db_user_password:
-    file: ../secrets/db_user_password
-  wp_admin_password:
-    file: ../secrets/wp_admin_password
-  wp_user_password:
-    file: ../secrets/wp_user_password
-
 services:
   mariadb:
     build: ./requirements/mariadb
     container_name: mariadb
     env_file:
       - .env
-    secrets:
-      - db_user_password
-      - db_admin_password
     ports:
       - "3306"
     networks:
@@ -39,9 +26,6 @@ services:
       - inception
     volumes:
       - wordpress_volume:/var/www/html
-    depends_on:
-      wordpress:
-        condition: service_healthy
     restart: on-failure
 
   wordpress:
@@ -55,20 +39,9 @@ services:
       - inception
     volumes:
       - wordpress_volume:/var/www/html
-    secrets:
-      - db_admin_password
-      - db_user_password
-      - wp_admin_password
-      - wp_user_password
     depends_on:
       mariadb:
         condition: service_healthy
-    healthcheck:
-     test: ["CMD", "nc", "-z", "127.0.0.1", "9000"]
-     interval: 10s
-     timeout: 3s
-     retries: 3
-     start_period: 10s
     restart: on-failure
 
 networks:
