@@ -27,6 +27,8 @@ services:
     volumes:
       - wordpress_volume:/var/www/html
     restart: on-failure
+    depends_on:
+      - wordpress
 
   wordpress:
     build: ./requirements/wordpress
