@@ -1,7 +1,7 @@
 .PHONY: run stop clean fclean
 
 COMPOSE = docker compose -f ./srcs/docker-compose.yml --env-file ./srcs/.env
-DATA_PATH = /home/abdothma/data
+DATA_PATH = /home/me/data
 
 run:
 	mkdir -p "$(DATA_PATH)/wordpress" "$(DATA_PATH)/mariadb"
