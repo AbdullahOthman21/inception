@@ -1,5 +1,3 @@
-.PHONY: run stop clean fclean
-
 COMPOSE = docker compose -f ./srcs/docker-compose.yml --env-file ./srcs/.env
 DATA_PATH = /home/me/data
 
@@ -9,9 +7,6 @@ run:
 
 stop:
 	$(COMPOSE) down
-
-clean:
-	$(COMPOSE) down --remove-orphans
 
 fclean:
 	$(COMPOSE) down --remove-orphans --volumes --rmi all
