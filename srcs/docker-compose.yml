@@ -4,7 +4,7 @@ services:
     container_name: mariadb
     env_file:
       - .env
-    ports:
+    expose:
       - "3306"
     networks:
       - inception
