@@ -28,7 +28,8 @@ services:
       - wordpress_volume:/var/www/html
     restart: on-failure
     depends_on:
-      - wordpress
+      wordpress:
+        service_healthy
 
   wordpress:
     build: ./requirements/wordpress
@@ -44,6 +45,11 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "ls", "/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 25
     restart: on-failure
 
 networks:

@@ -1,13 +1,14 @@
 COMPOSE = docker compose -f ./srcs/docker-compose.yml --env-file ./srcs/.env
-DATA_PATH = /home/me/data
 
 run:
-	mkdir -p "$(DATA_PATH)/wordpress" "$(DATA_PATH)/mariadb"
+	mkdir -p /home/abdothma/wordpress
+	mkdir -p /home/abdothma/mariadb
 	$(COMPOSE) up -d
 
 stop:
 	$(COMPOSE) down
 
-fclean:
-	$(COMPOSE) down --remove-orphans --volumes --rmi all
-	sudo rm -rf "$(DATA_PATH)/wordpress" "$(DATA_PATH)/mariadb"
+clean:
+	$(COMPOSE) down --volumes --rmi all
+	sudo rm -rf /home/abdothma/wordpress
+	sudo rm -rf /home/abdothma/mariadb

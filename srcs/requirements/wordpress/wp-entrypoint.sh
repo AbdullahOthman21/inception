@@ -42,5 +42,6 @@ fi
 
 chown -R nobody:nobody /var/www/html
 
+touch /ready
 echo "wordpress: starting php-fpm83 in the foreground"
 exec php-fpm83 -F
